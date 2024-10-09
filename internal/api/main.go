@@ -43,7 +43,6 @@ func (h *Handler) getBlockchainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(gambiscoinJson)
 }
 
@@ -63,7 +62,6 @@ func (h *Handler) createTransactionHandler(w http.ResponseWriter, r *http.Reques
 
 	note := fmt.Sprintf(`{"note":"Transaction will be added in block %d"}`, blockIndex)
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(note))
 }
 
@@ -100,7 +98,6 @@ func (h *Handler) mineHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(noteJson)
 }
 
@@ -129,6 +126,7 @@ func (h *Handler) registerAndBroadcastHandler(w http.ResponseWriter, r *http.Req
 		return
 	} else {
 		h.Blockchain.NetworkNodes = append(h.Blockchain.NetworkNodes, req.NewNodeUrl)
+		w.Write([]byte(fmt.Sprintf(`{"note":"Successfully registered %s locally"}`, req.NewNodeUrl)))
 		fmt.Printf("Successfully registered node %s locally\n", req.NewNodeUrl)
 	}
 
@@ -185,7 +183,6 @@ func (h *Handler) registerNodeHandler(w http.ResponseWriter, r *http.Request) {
 	h.Blockchain.NetworkNodes = append(h.Blockchain.NetworkNodes, req.NewNodeUrl)
 	fmt.Printf("Successfully registered node %s locally\n", req.NewNodeUrl)
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(`{"note":"New node registered successfully with node"}`))
 }
 
