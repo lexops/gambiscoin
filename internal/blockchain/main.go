@@ -26,6 +26,13 @@ type Block struct {
 type Blockchain struct {
 	Chain               []Block       `json:"chain"`
 	PendingTransactions []Transaction `json:"pendingTransactions"`
+	CurrentNodeUrl      string        `json:"currentNodeUrl"`
+	NetworkNodes        []string      `json:"networkNodes"`
+}
+
+type CurrentBlockData struct {
+	Transactions []Transaction `json:"transactions"`
+	Index        int           `json:"index"`
 }
 
 func NewBlockchain() *Blockchain {
@@ -46,13 +53,7 @@ func NewBlockchain() *Blockchain {
 				Hash:         "0",
 			},
 		},
-		PendingTransactions: []Transaction{
-			{
-				Sender:    "Nakamoto",
-				Recipient: "Satoshi",
-				Amount:    0,
-			},
-		},
+		PendingTransactions: []Transaction{},
 	}
 }
 
@@ -106,7 +107,7 @@ func hash256(data string) string {
 
 func HashBlock(
 	previousHash string,
-	currentBlockData []Transaction,
+	currentBlockData CurrentBlockData,
 	nonce int,
 ) string {
 	currentBlockDataAsJson, _ := json.Marshal(currentBlockData)
@@ -121,7 +122,7 @@ func HashBlock(
 
 func ProofOfWork(
 	previousHash string,
-	currentBlockData []Transaction,
+	currentBlockData CurrentBlockData,
 ) int {
 	var nonce int = 0
 	hash := HashBlock(previousHash, currentBlockData, nonce)
